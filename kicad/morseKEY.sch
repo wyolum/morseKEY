@@ -1,0 +1,166 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "morseKEY"
+Date "2017-01-21"
+Rev "v1"
+Comp "WyoLum"
+Comment1 "Morse Code USB Keyboard"
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L ATTINY85-P IC?
+U 1 1 5883248B
+P 5725 3725
+F 0 "IC?" H 4575 4125 50  0000 C CNN
+F 1 "ATTINY85-P" H 6725 3325 50  0000 C CNN
+F 2 "DIP8" H 6725 3725 50  0000 C CIN
+F 3 "" H 5725 3725 50  0000 C CNN
+	1    5725 3725
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 58832568
+P 8475 1550
+F 0 "C?" H 8500 1650 50  0000 L CNN
+F 1 "C" H 8500 1450 50  0000 L CNN
+F 2 "" H 8513 1400 50  0000 C CNN
+F 3 "" H 8475 1550 50  0000 C CNN
+	1    8475 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 5883258F
+P 8925 1575
+F 0 "C?" H 8950 1675 50  0000 L CNN
+F 1 "C" H 8950 1475 50  0000 L CNN
+F 2 "" H 8963 1425 50  0000 C CNN
+F 3 "" H 8925 1575 50  0000 C CNN
+	1    8925 1575
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 588325AA
+P 8475 2150
+F 0 "R?" V 8555 2150 50  0000 C CNN
+F 1 "R" V 8475 2150 50  0000 C CNN
+F 2 "" V 8405 2150 50  0000 C CNN
+F 3 "" H 8475 2150 50  0000 C CNN
+	1    8475 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 588325C7
+P 8925 2150
+F 0 "R?" V 9005 2150 50  0000 C CNN
+F 1 "R" V 8925 2150 50  0000 C CNN
+F 2 "" V 8855 2150 50  0000 C CNN
+F 3 "" H 8925 2150 50  0000 C CNN
+	1    8925 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 588325E6
+P 9275 2150
+F 0 "R?" V 9355 2150 50  0000 C CNN
+F 1 "R" V 9275 2150 50  0000 C CNN
+F 2 "" V 9205 2150 50  0000 C CNN
+F 3 "" H 9275 2150 50  0000 C CNN
+	1    9275 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L ZENERsmall D?
+U 1 1 58832607
+P 8425 2800
+F 0 "D?" H 8425 2900 50  0000 C CNN
+F 1 "ZENERsmall" H 8425 2700 50  0000 C CNN
+F 2 "" H 8425 2800 50  0000 C CNN
+F 3 "" H 8425 2800 50  0000 C CNN
+	1    8425 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L ZENERsmall D?
+U 1 1 5883263A
+P 8975 2750
+F 0 "D?" H 8975 2850 50  0000 C CNN
+F 1 "ZENERsmall" H 8975 2650 50  0000 C CNN
+F 2 "" H 8975 2750 50  0000 C CNN
+F 3 "" H 8975 2750 50  0000 C CNN
+	1    8975 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L SPEAKER SP?
+U 1 1 5883265F
+P 8400 3575
+F 0 "SP?" H 8300 3825 50  0000 C CNN
+F 1 "SPEAKER" H 8300 3325 50  0000 C CNN
+F 2 "" H 8400 3575 50  0000 C CNN
+F 3 "" H 8400 3575 50  0000 C CNN
+	1    8400 3575
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_01X02 P?
+U 1 1 58832686
+P 9200 3550
+F 0 "P?" H 9200 3700 50  0000 C CNN
+F 1 "CONN_01X02" V 9300 3550 50  0000 C CNN
+F 2 "" H 9200 3550 50  0000 C CNN
+F 3 "" H 9200 3550 50  0000 C CNN
+	1    9200 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L USB_A P?
+U 1 1 588326BD
+P 10125 3450
+F 0 "P?" H 10325 3250 50  0000 C CNN
+F 1 "USB_A" H 10075 3650 50  0000 C CNN
+F 2 "" V 10075 3350 50  0000 C CNN
+F 3 "" V 10075 3350 50  0000 C CNN
+	1    10125 3450
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

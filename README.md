@@ -11,9 +11,14 @@ Morse Key presents itself as a USB keyboard. Typing provides audible feedback vi
 
 * [fabricate](/fabricate) - 3D CAD files / assembly files
 
-![morseKEY_top](/kicad/morseKEY_images/morseKEY_01.png)
+## code
 
-![morseKEY_bot](/kicad/morseKEY_images/morseKEY_02.png)
+* [code](/code) - FW code
+
+
+![morseKEY_top](/kicad/images/morseKEY_01.png)
+
+![morseKEY_bot](/kicad/images/morseKEY_02.png)
 
 License
 -------

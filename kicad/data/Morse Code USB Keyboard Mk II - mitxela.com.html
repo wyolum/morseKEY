@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)https://mitxela.com/projects/morse_code_usb_keyboard_mk_ii -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="./Morse Code USB Keyboard Mk II - mitxela.com_files/functions.js"></script>
+<script>
+document.write("<style>img[onload]{opacity:0;transition:opacity 2s}</style>");
+</script><style>img[onload]{opacity:0;transition:opacity 2s}</style>
+<link rel="stylesheet" type="text/css" href="./Morse Code USB Keyboard Mk II - mitxela.com_files/p.css">
+<link rel="alternate" type="application/rss+xml" href="http://mitxela.com/feed">
+<title>Morse Code USB Keyboard Mk II - mitxela.com</title><style>body {font-family: Helvetica, sans-serif; margin:10px 0px 0px 0px;}
+iframe{display:block;border:0;margin:auto}
+pre {color: #000000;font-family: 'Courier New';font-size: 10pt;}
+.sc1 {color: #008000;}
+.sc2 {color: #008000;}
+.sc4 {color: #FF8000;}
+.sc5 {color: #0000FF;font-weight: bold;}
+.sc7 {color: #808080;}
+.sc9 {color: #804000;}
+.sc10 {color: #000080;font-weight: bold;}
+.sc16 {color: #8000FF;}</style></head><body>
+<div id="mxmain" style="width:80%;margin:auto;"><a href="https://mitxela.com/projects/hardware"><img onload="this.style.opacity=1;" src="./Morse Code USB Keyboard Mk II - mitxela.com_files/mitxela_dot_com-65.png" title="Back to Hardware" alt="Back to Hardware" style="opacity: 1;"></a><h1>Morse Code USB Keyboard Mk II</h1>2 Nov 2015<br><b>Progress: Complete</b><br><br>
+<iframe width="704" height="396" src="./Morse Code USB Keyboard Mk II - mitxela.com_files/tUNjKQWjo80.html" allowfullscreen=""></iframe><br><br>
+
+I'm now going to eat my words from when I made my <a href="https://mitxela.com/projects/morse_code_usb_keyboard">first USB Morse code key</a>. I said that using a microcontroller was overkill. The usb-serial cable worked well enough, but it had a couple of major problems: inconvenience and total lack of portability. Can you believe that the cheap cable required a driver to work on windows? And always having to run a python script couldn't be less convenient, not to mention it took up 10%-ish of your CPU when left running in the background. I used it for a while, but when I got a new laptop I just couldn't be bothered to set it up again. <br>
+<br>
+<img src="./Morse Code USB Keyboard Mk II - mitxela.com_files/MorseUSB4.jpg" class="c" alt=""><br>
+<br>
+I'd been wanting to make something with USB for a while anyway. I spent a few hours reading through the USB specification but I just couldn't cope. I was planning on bit-banging it in assembler. Finally I gave up, bit the bullet, and used the <a href="https://www.obdev.at/products/vusb/index.html">V-USB library</a>. This, once I finally got it to compile, was shockingly easy to use. The disappointing part is I still don't really understand USB at all. <br>
+<br>
+The most important aspect of this project is being a 'Human Interface Device' that doesn't require a driver. It presents itself as a USB keyboard. This means you can plug it into any computer and it works without a fuss. In addition, all of the processing is done by the chip, so there's no reason not to leave it plugged in all the time. When you connect it to a machine for the first time, you get a glorious message like this:<br>
+<br>
+<img src="./Morse Code USB Keyboard Mk II - mitxela.com_files/USB_HID_install.png" class="c" alt=""><br>
+<br>
+The code is based on an example from the V-USB website called EasyLogger. It reads the ADC and emulates a keyboard to type the value. I essentially just translated my original script into C and squeezed it in. It uses the same character set as before, but one thing I added was holding down the key for much longer than the dash length triggers a backspace. The code is not beautiful or clever, but it's perfectly functional and was written extremely quickly. I started the project at about 3pm on Saturday, and I had to go out at 6pm, so I set myself that as a deadline and <i>just</i> got it finished in time.<br>
+<br>
+<br>
+<br>
+<br>
+<img src="./Morse Code USB Keyboard Mk II - mitxela.com_files/MorseUSB3.jpg" class="c" alt=""><br>
+<br>
+I left room around the chip to fit a test clip onto it and reprogram as needed. Currently that's the only way of adjusting the speed, although the current values do have a very wide tolerance. There's one pin unused, perhaps I could squeeze a trimpot onto it for external adjustment. Heh... the ATtiny85 was 90p, the USB connector, the piezo and the passives probably add up to 50p -- astoundingly, the whole thing cost less than the usb-serial cable of the first version.<br>
+<br>
+<img src="./Morse Code USB Keyboard Mk II - mitxela.com_files/MorseUSB2.jpg" class="c" alt=""><br>
+<br>
+Bit messy but I was soldering at breakneck speed.<br>
+<br>
+<img src="./Morse Code USB Keyboard Mk II - mitxela.com_files/MorseUSB1.jpg" class="c" alt=""><br>
+<br>
+Instead of a dictionary lookup for working out what was typed, I used one long string of comparisons. Tedious as it was to write it out like this, it was made much easier by <a href="https://upload.wikimedia.org/wikipedia/commons/c/ca/Morse_code_tree3.png">this</a> diagram from wikipedia. It also runs quite quick, as most characters can be identified in fewer than five comparisons. The keycodes I found <a href="http://www.freebsddiary.org/APC/usb_hid_usages.php">here</a>.<br>
+<br>
+<img src="./Morse Code USB Keyboard Mk II - mitxela.com_files/MorseKeySchematic.png" class="c" alt=""><br>
+<br>
+<br>
+If you want to recreate this, the easiest way is to download <a href="https://www.obdev.at/products/vusb/easylogger.html">EasyLogger</a> and replace the main.c file with the code below. Alternatively, the compiled hex file is available <a href="https://mitxela.com/img/uploads/morseUSB/MorseUSBKeyboard.hex">here</a>. (Remember to set the low fuse to C1 for the PLL clock source.) The project uses the example vendor and hardware IDs provided by Objective Development. There are a number of rules regarding the use of these, but I didn't pay too much attention since this is only for personal use.<br>
+<br>
+<br>
+<pre><span class="sc1">/* Morse Code USB Keyboard
+ * based on EasyLogger from Objective Development
+ * mitxela.com/projects/morse_code_usb_keyboard_mk_ii
+ */</span>
+
+<span class="sc9">#include &lt;avr/io.h&gt;
+#include &lt;avr/wdt.h&gt;
+#include &lt;avr/eeprom.h&gt;
+#include &lt;avr/interrupt.h&gt;
+#include &lt;avr/pgmspace.h&gt;
+#include &lt;util/delay.h&gt;
+</span>
+<span class="sc9">#include "usbdrv.h"
+</span>
+<span class="sc1">/*
+Pin assignment:
+PB1 = waveform output to piezo
+PB4 = key input (active low with pull-up)
+
+PB0, PB2 = USB data lines
+*/</span>
+
+<span class="sc9">#define BIT_PIEZO 1
+#define BIT_KEY 4
+</span>
+<span class="sc9">#define UTIL_BIN4(x)        (uchar)((0##x &amp; 01000)/64 + (0##x &amp; 0100)/16 + (0##x &amp; 010)/4 + (0##x &amp; 1))
+#define UTIL_BIN8(hi, lo)   (uchar)(UTIL_BIN4(hi) * 16 + UTIL_BIN4(lo))
+</span>
+<span class="sc9">#ifndef NULL
+#define NULL    ((void *)0)
+#endif
+</span>
+<span class="sc1">/* ------------------------------------------------------------------------- */</span>
+
+<span class="sc16">const</span> uchar     dashlength  <span class="sc10">=</span> <span class="sc4">9</span><span class="sc10">;</span>
+<span class="sc16">const</span> uchar     spacelength <span class="sc10">=</span> <span class="sc4">45</span><span class="sc10">;</span>   <span class="sc2">// longer for farnsworth pause
+</span>
+<span class="sc16">static</span> uchar    reportBuffer<span class="sc10">[</span><span class="sc4">2</span><span class="sc10">];</span>    <span class="sc2">// buffer for HID reports
+</span><span class="sc16">static</span> uchar    idleRate<span class="sc10">;</span>           <span class="sc2">// in 4 ms units
+</span>
+<span class="sc16">static</span> uchar    modifier<span class="sc10">;</span>
+
+<span class="sc16">static</span> uchar    valueBuffer<span class="sc10">[</span><span class="sc4">16</span><span class="sc10">];</span>
+<span class="sc16">static</span> uchar    <span class="sc10">*</span>nextDigit<span class="sc10">;</span>
+
+<span class="sc16">static</span> uchar    symbolBuffer<span class="sc10">[</span><span class="sc4">16</span><span class="sc10">];</span>
+<span class="sc16">static</span> uchar    <span class="sc10">*</span>symbol<span class="sc10">;</span>
+
+
+<span class="sc1">/* ------------------------------------------------------------------------- */</span>
+
+<span class="sc16">const</span> PROGMEM <span class="sc16">char</span> usbHidReportDescriptor<span class="sc10">[</span>USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH<span class="sc10">]</span> <span class="sc10">=</span> <span class="sc10">{</span> <span class="sc1">/* USB report descriptor */</span>
+    <span class="sc4">0x05</span><span class="sc10">,</span> <span class="sc4">0x01</span><span class="sc10">,</span>                 <span class="sc2">// USAGE_PAGE (Generic Desktop)
+</span>    <span class="sc4">0x09</span><span class="sc10">,</span> <span class="sc4">0x06</span><span class="sc10">,</span>                 <span class="sc2">// USAGE (Keyboard)
+</span>    <span class="sc4">0xa1</span><span class="sc10">,</span> <span class="sc4">0x01</span><span class="sc10">,</span>                 <span class="sc2">// COLLECTION (Application)
+</span>    <span class="sc4">0x05</span><span class="sc10">,</span> <span class="sc4">0x07</span><span class="sc10">,</span>                 <span class="sc2">// USAGE_PAGE (Keyboard)
+</span>    <span class="sc4">0x19</span><span class="sc10">,</span> <span class="sc4">0xe0</span><span class="sc10">,</span>                 <span class="sc2">// USAGE_MINIMUM (Keyboard LeftControl)
+</span>    <span class="sc4">0x29</span><span class="sc10">,</span> <span class="sc4">0xe7</span><span class="sc10">,</span>                 <span class="sc2">// USAGE_MAXIMUM (Keyboard Right GUI)
+</span>    <span class="sc4">0x15</span><span class="sc10">,</span> <span class="sc4">0x00</span><span class="sc10">,</span>                 <span class="sc2">// LOGICAL_MINIMUM (0)
+</span>    <span class="sc4">0x25</span><span class="sc10">,</span> <span class="sc4">0x01</span><span class="sc10">,</span>                 <span class="sc2">// LOGICAL_MAXIMUM (1)
+</span>    <span class="sc4">0x75</span><span class="sc10">,</span> <span class="sc4">0x01</span><span class="sc10">,</span>                 <span class="sc2">// REPORT_SIZE (1)
+</span>    <span class="sc4">0x95</span><span class="sc10">,</span> <span class="sc4">0x08</span><span class="sc10">,</span>                 <span class="sc2">// REPORT_COUNT (8)
+</span>    <span class="sc4">0x81</span><span class="sc10">,</span> <span class="sc4">0x02</span><span class="sc10">,</span>                 <span class="sc2">// INPUT (Data,Var,Abs)
+</span>    <span class="sc4">0x95</span><span class="sc10">,</span> <span class="sc4">0x01</span><span class="sc10">,</span>                 <span class="sc2">// REPORT_COUNT (1)
+</span>    <span class="sc4">0x75</span><span class="sc10">,</span> <span class="sc4">0x08</span><span class="sc10">,</span>                 <span class="sc2">// REPORT_SIZE (8)
+</span>    <span class="sc4">0x25</span><span class="sc10">,</span> <span class="sc4">0x65</span><span class="sc10">,</span>                 <span class="sc2">// LOGICAL_MAXIMUM (101)
+</span>    <span class="sc4">0x19</span><span class="sc10">,</span> <span class="sc4">0x00</span><span class="sc10">,</span>                 <span class="sc2">// USAGE_MINIMUM (Reserved (no event indicated))
+</span>    <span class="sc4">0x29</span><span class="sc10">,</span> <span class="sc4">0x65</span><span class="sc10">,</span>                 <span class="sc2">// USAGE_MAXIMUM (Keyboard Application)
+</span>    <span class="sc4">0x81</span><span class="sc10">,</span> <span class="sc4">0x00</span><span class="sc10">,</span>                 <span class="sc2">// INPUT (Data,Ary,Abs)
+</span>    <span class="sc4">0xc0</span>                        <span class="sc2">// END_COLLECTION
+</span><span class="sc10">};</span>
+<span class="sc1">/* We use a simplified keyboard report descriptor which does not support the
+ * boot protocol. We don't allow setting status LEDs and we only allow one
+ * simultaneous key press (except modifiers). We can therefore use short
+ * 2 byte input reports.
+ * The report descriptor has been created with usb.org's "HID Descriptor Tool"
+ * which can be downloaded from http://www.usb.org/developers/hidpage/.
+ * Redundant entries (such as LOGICAL_MINIMUM and USAGE_PAGE) have been omitted
+ * for the second INPUT item.
+ */</span>
+
+<span class="sc1">/* Keyboard usage values, see usb.org's HID-usage-tables document, chapter
+ * 10 Keyboard/Keypad Page for more codes.
+ */</span>
+<span class="sc9">#define MOD_CONTROL_LEFT    (1&lt;&lt;0)
+#define MOD_SHIFT_LEFT      (1&lt;&lt;1)
+#define MOD_ALT_LEFT        (1&lt;&lt;2)
+#define MOD_GUI_LEFT        (1&lt;&lt;3)
+#define MOD_CONTROL_RIGHT   (1&lt;&lt;4)
+#define MOD_SHIFT_RIGHT     (1&lt;&lt;5)
+#define MOD_ALT_RIGHT       (1&lt;&lt;6)
+#define MOD_GUI_RIGHT       (1&lt;&lt;7)
+</span>
+<span class="sc1">/* ------------------------------------------------------------------------- */</span>
+
+<span class="sc16">static</span> <span class="sc16">void</span> buildReport<span class="sc10">(</span><span class="sc16">void</span><span class="sc10">)</span> <span class="sc10">{</span>
+    uchar   key <span class="sc10">=</span> <span class="sc4">0</span><span class="sc10">;</span>
+    uchar   mod <span class="sc10">=</span> <span class="sc4">0</span><span class="sc10">;</span>
+
+    <span class="sc5">if</span><span class="sc10">(</span>nextDigit <span class="sc10">!=</span> <span class="sc5">NULL</span><span class="sc10">){</span>
+        key <span class="sc10">=</span> <span class="sc10">*</span>nextDigit<span class="sc10">;</span>
+        <span class="sc5">if</span> <span class="sc10">(</span>key<span class="sc10">)</span> mod <span class="sc10">=</span> modifier<span class="sc10">;</span>
+    <span class="sc10">}</span>
+    reportBuffer<span class="sc10">[</span><span class="sc4">0</span><span class="sc10">]</span> <span class="sc10">=</span> mod<span class="sc10">;</span>
+    reportBuffer<span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]</span> <span class="sc10">=</span> key<span class="sc10">;</span>
+<span class="sc10">}</span>
+
+<span class="sc16">static</span> <span class="sc16">void</span> typechar<span class="sc10">(</span><span class="sc16">char</span> key<span class="sc10">)</span> <span class="sc10">{</span>
+    <span class="sc5">if</span> <span class="sc10">(</span>nextDigit<span class="sc10">==&amp;</span>valueBuffer<span class="sc10">[</span><span class="sc5">sizeof</span><span class="sc10">(</span>valueBuffer<span class="sc10">)])</span> <span class="sc10">{*--</span>nextDigit <span class="sc10">=</span> <span class="sc4">0xff</span><span class="sc10">;}</span><span class="sc1">/* terminate with 0xff */</span>
+    <span class="sc10">*--</span>nextDigit <span class="sc10">=</span> <span class="sc4">0</span><span class="sc10">;</span>
+    <span class="sc10">*--</span>nextDigit <span class="sc10">=</span> key<span class="sc10">;</span>
+<span class="sc10">}</span>
+
+<span class="sc16">static</span> <span class="sc16">void</span> timerPoll<span class="sc10">(</span><span class="sc16">void</span><span class="sc10">)</span> <span class="sc10">{</span>
+    <span class="sc16">static</span> uchar up<span class="sc10">;</span>
+    <span class="sc16">static</span> uchar down<span class="sc10">;</span>
+
+    <span class="sc5">if</span><span class="sc10">(</span>TIFR <span class="sc10">&amp;</span> <span class="sc10">(</span><span class="sc4">1</span> <span class="sc10">&lt;&lt;</span> TOV1<span class="sc10">)){</span>
+        TIFR <span class="sc10">=</span> <span class="sc10">(</span><span class="sc4">1</span> <span class="sc10">&lt;&lt;</span> TOV1<span class="sc10">);</span>  <span class="sc2">// clear overflow
+</span>
+        <span class="sc5">if</span><span class="sc10">(!(</span>PINB <span class="sc10">&amp;</span> <span class="sc10">(</span><span class="sc4">1</span> <span class="sc10">&lt;&lt;</span> BIT_KEY<span class="sc10">))){</span> <span class="sc2">//key held
+</span>            TCCR0B <span class="sc10">=</span> <span class="sc4">3</span><span class="sc10">;</span> <span class="sc2">//Sound on
+</span>            <span class="sc5">if</span> <span class="sc10">(</span>down<span class="sc10">++</span> <span class="sc10">==</span>spacelength<span class="sc10">+</span>dashlength<span class="sc10">)</span> <span class="sc10">{</span>
+                down<span class="sc10">=</span>spacelength<span class="sc10">;</span>
+                typechar<span class="sc10">(</span><span class="sc4">0x2A</span><span class="sc10">);</span>
+                up<span class="sc10">=</span><span class="sc4">255</span><span class="sc10">;</span>
+            <span class="sc10">}</span>
+            <span class="sc5">if</span> <span class="sc10">(</span>down<span class="sc10">&lt;</span>spacelength<span class="sc10">)</span> up<span class="sc10">=</span><span class="sc4">0</span><span class="sc10">;</span>
+        <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>down<span class="sc10">){</span>
+            TCCR0B <span class="sc10">=</span> <span class="sc4">0</span><span class="sc10">;</span> <span class="sc2">//Sound off
+</span>            <span class="sc5">if</span> <span class="sc10">(</span>symbol<span class="sc10">!=&amp;</span>symbolBuffer<span class="sc10">[</span><span class="sc5">sizeof</span><span class="sc10">(</span>symbolBuffer<span class="sc10">)]){</span>
+                <span class="sc5">if</span> <span class="sc10">(</span>down<span class="sc10">&gt;=</span>spacelength<span class="sc10">)</span> <span class="sc10">{</span>
+                    <span class="sc10">*</span>symbol<span class="sc10">=</span><span class="sc4">0</span><span class="sc10">;</span>
+                    <span class="sc5">while</span> <span class="sc10">(</span>symbol<span class="sc10">!=&amp;</span>symbolBuffer<span class="sc10">[</span><span class="sc4">0</span><span class="sc10">])</span> <span class="sc10">{*--</span>symbol<span class="sc10">=</span><span class="sc4">0</span><span class="sc10">;}</span>
+                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>down<span class="sc10">&lt;</span>dashlength<span class="sc10">)</span> <span class="sc10">{</span>
+                    <span class="sc10">*</span>symbol<span class="sc10">++</span> <span class="sc10">=</span> <span class="sc7">'.'</span><span class="sc10">;</span>
+                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                    <span class="sc10">*</span>symbol<span class="sc10">++</span> <span class="sc10">=</span> <span class="sc7">'-'</span><span class="sc10">;</span>
+                <span class="sc10">}</span>
+            <span class="sc10">}</span>
+            down <span class="sc10">=</span><span class="sc4">0</span><span class="sc10">;</span>
+        <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+            TCCR0B <span class="sc10">=</span> <span class="sc4">0</span><span class="sc10">;</span> <span class="sc2">//Sound off
+</span>            <span class="sc5">if</span> <span class="sc10">(</span>up<span class="sc10">++</span> <span class="sc10">==</span><span class="sc4">255</span><span class="sc10">)</span> up<span class="sc10">=</span><span class="sc4">255</span><span class="sc10">;</span>
+            <span class="sc5">if</span> <span class="sc10">(</span>up<span class="sc10">==</span><span class="sc4">1</span><span class="sc10">+</span>dashlength<span class="sc10">)</span> <span class="sc10">{</span>
+                modifier<span class="sc10">=</span><span class="sc4">0</span><span class="sc10">;</span>
+                <span class="sc2">//work out key
+</span>                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">0</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                    <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                        <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                            <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                    <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">){</span>
+                                        typechar<span class="sc10">(</span><span class="sc4">0x22</span><span class="sc10">);</span><span class="sc2">//5
+</span>                                    <span class="sc10">}</span>
+                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">){</span>
+                                        typechar<span class="sc10">(</span><span class="sc4">0x21</span><span class="sc10">);</span><span class="sc2">//4
+</span>                                    <span class="sc10">}</span>
+                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x0B</span><span class="sc10">);</span><span class="sc2">//h
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                    <span class="sc2">//if (symbolBuffer[5]==0){
+</span>                                        <span class="sc2">//typechar();//
+</span>                                    <span class="sc2">//}
+</span>                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">){</span>
+                                        typechar<span class="sc10">(</span><span class="sc4">0x20</span><span class="sc10">);</span><span class="sc2">//3
+</span>                                    <span class="sc10">}</span>
+                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x19</span><span class="sc10">);</span><span class="sc2">//V
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                typechar<span class="sc10">(</span><span class="sc4">0x16</span><span class="sc10">);</span><span class="sc2">//s
+</span>                            <span class="sc10">}</span>
+                        <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                            <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x09</span><span class="sc10">);</span><span class="sc2">//F
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'-'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x1F</span><span class="sc10">);</span><span class="sc2">//2
+</span>                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'.'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc7">'.'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">6</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    modifier <span class="sc10">=</span> MOD_SHIFT_RIGHT<span class="sc10">;</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x38</span><span class="sc10">);</span><span class="sc2">// /
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                typechar<span class="sc10">(</span><span class="sc4">0x18</span><span class="sc10">);</span><span class="sc2">//U
+</span>                            <span class="sc10">}</span>
+                        <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                            typechar<span class="sc10">(</span><span class="sc4">0x0C</span><span class="sc10">);</span><span class="sc2">//i
+</span>                        <span class="sc10">}</span>
+                    <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                        
+                        <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                            <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> typechar<span class="sc10">(</span><span class="sc4">0x0F</span><span class="sc10">);</span><span class="sc2">//L
+</span>                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'.'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc7">'-'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">6</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> typechar<span class="sc10">(</span><span class="sc4">0x37</span><span class="sc10">);</span><span class="sc2">//.
+</span>                                <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'.'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">6</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>modifier<span class="sc10">=</span>MOD_SHIFT_RIGHT<span class="sc10">;</span>typechar<span class="sc10">(</span><span class="sc4">0x2E</span><span class="sc10">);}</span><span class="sc2">//+
+</span>                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                typechar<span class="sc10">(</span><span class="sc4">0x15</span><span class="sc10">);</span><span class="sc2">//R
+</span>                            <span class="sc10">}</span>
+                        <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                            <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x13</span><span class="sc10">);</span><span class="sc2">//P
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x0D</span><span class="sc10">);</span><span class="sc2">//J
+</span>                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'-'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">){</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x1E</span><span class="sc10">);</span><span class="sc2">//1
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                typechar<span class="sc10">(</span><span class="sc4">0x1A</span><span class="sc10">);</span><span class="sc2">//W
+</span>                            <span class="sc10">}</span>
+                        <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                            typechar<span class="sc10">(</span><span class="sc4">0x04</span><span class="sc10">);</span><span class="sc2">//A
+</span>                        <span class="sc10">}</span>
+                    <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                        typechar<span class="sc10">(</span><span class="sc4">0x08</span><span class="sc10">);</span><span class="sc2">//e
+</span>                    <span class="sc10">}</span>
+                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">0</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                    <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                        <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                            <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                    <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">){</span>
+                                        typechar<span class="sc10">(</span><span class="sc4">0x23</span><span class="sc10">);</span><span class="sc2">//6
+</span>                                    <span class="sc10">}</span>
+                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">){</span>
+                                        typechar<span class="sc10">(</span><span class="sc4">0x2E</span><span class="sc10">);</span><span class="sc2">// =
+</span>                                    <span class="sc10">}</span>
+                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x05</span><span class="sc10">);</span><span class="sc2">//B
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                    <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">){</span>
+                                        typechar<span class="sc10">(</span><span class="sc4">0x38</span><span class="sc10">);</span><span class="sc2">// /
+</span>                                    <span class="sc10">}</span>
+                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    <span class="sc2">//if (symbolBuffer[5]==0){
+</span>                                        <span class="sc2">//typechar();//
+</span>                                    <span class="sc2">//}
+</span>                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x1B</span><span class="sc10">);</span><span class="sc2">//X
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                typechar<span class="sc10">(</span><span class="sc4">0x07</span><span class="sc10">);</span><span class="sc2">//D
+</span>                            <span class="sc10">}</span>
+                        <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                            <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x06</span><span class="sc10">);</span><span class="sc2">//C
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x1C</span><span class="sc10">);</span><span class="sc2">//Y
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                typechar<span class="sc10">(</span><span class="sc4">0x0E</span><span class="sc10">);</span><span class="sc2">//K
+</span>                            <span class="sc10">}</span>
+                        <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                            typechar<span class="sc10">(</span><span class="sc4">0x11</span><span class="sc10">);</span><span class="sc2">//N
+</span>                        <span class="sc10">}</span>
+                    <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                        <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                            <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> typechar<span class="sc10">(</span><span class="sc4">0x1D</span><span class="sc10">);</span><span class="sc2">//Z
+</span>                                <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'.'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> typechar<span class="sc10">(</span><span class="sc4">0x24</span><span class="sc10">);</span><span class="sc2">//7
+</span>                                <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'-'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc7">'-'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">6</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> typechar<span class="sc10">(</span><span class="sc4">0x36</span><span class="sc10">);</span><span class="sc2">//,
+</span>                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> typechar<span class="sc10">(</span><span class="sc4">0x14</span><span class="sc10">);</span><span class="sc2">//Q
+</span>                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                typechar<span class="sc10">(</span><span class="sc4">0x0A</span><span class="sc10">);</span><span class="sc2">//G
+</span>                            <span class="sc10">}</span>
+                        <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                            <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'.'</span><span class="sc10">){</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'.'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x25</span><span class="sc10">);</span><span class="sc2">//8
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]==</span><span class="sc7">'-'</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'-'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x27</span><span class="sc10">);</span><span class="sc2">// 0
+</span>                                <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc5">if</span> <span class="sc10">(</span>symbolBuffer<span class="sc10">[</span><span class="sc4">4</span><span class="sc10">]==</span><span class="sc7">'.'</span> <span class="sc10">&amp;&amp;</span> symbolBuffer<span class="sc10">[</span><span class="sc4">5</span><span class="sc10">]==</span><span class="sc4">0</span><span class="sc10">)</span> <span class="sc10">{</span>
+                                    typechar<span class="sc10">(</span><span class="sc4">0x26</span><span class="sc10">);</span><span class="sc2">// 9
+</span>                                <span class="sc10">}</span>
+                            <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                                typechar<span class="sc10">(</span><span class="sc4">0x12</span><span class="sc10">);</span><span class="sc2">//O
+</span>                            <span class="sc10">}</span>
+                        <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                            typechar<span class="sc10">(</span><span class="sc4">0x10</span><span class="sc10">);</span><span class="sc2">//M
+</span>                        <span class="sc10">}</span>
+                    <span class="sc10">}</span> <span class="sc5">else</span> <span class="sc10">{</span>
+                        typechar<span class="sc10">(</span><span class="sc4">0x17</span><span class="sc10">);</span><span class="sc2">//T
+</span>                    <span class="sc10">}</span>
+                <span class="sc10">}</span>
+                
+                <span class="sc2">//empty stack
+</span>                <span class="sc10">*</span>symbol<span class="sc10">=</span><span class="sc4">0</span><span class="sc10">;</span>
+                <span class="sc5">while</span> <span class="sc10">(</span>symbol<span class="sc10">!=&amp;</span>symbolBuffer<span class="sc10">[</span><span class="sc4">0</span><span class="sc10">])</span> <span class="sc10">{*--</span>symbol<span class="sc10">=</span><span class="sc4">0</span><span class="sc10">;}</span>
+            <span class="sc10">}</span>
+            <span class="sc5">if</span> <span class="sc10">(</span>up<span class="sc10">==</span>spacelength <span class="sc10">&amp;&amp;</span> down<span class="sc10">&lt;</span>spacelength<span class="sc10">)</span> <span class="sc10">{</span>
+                <span class="sc2">//type space
+</span>                typechar<span class="sc10">(</span><span class="sc4">0x2C</span><span class="sc10">);</span>
+            <span class="sc10">}</span>
+        <span class="sc10">}</span>
+
+    <span class="sc10">}</span>
+<span class="sc10">}</span>
+
+
+<span class="sc1">/* ------------------------------------------------------------------------- */</span>
+
+<span class="sc16">static</span> <span class="sc16">void</span> timerInit<span class="sc10">(</span><span class="sc16">void</span><span class="sc10">)</span> <span class="sc10">{</span>
+    TCCR0A <span class="sc10">=</span> <span class="sc4">0b00010010</span><span class="sc10">;</span>
+    TCCR0B <span class="sc10">=</span> <span class="sc4">0</span><span class="sc10">;</span>
+    OCR0A <span class="sc10">=</span> <span class="sc4">64</span><span class="sc10">;</span>
+    TCCR1 <span class="sc10">=</span> <span class="sc4">0x0b</span><span class="sc10">;</span>           <span class="sc1">/* select clock: 16.5M/1k -&gt; overflow rate = 16.5M/256k = 62.94 Hz */</span>
+    modifier<span class="sc10">=</span><span class="sc4">0</span><span class="sc10">;</span>
+    symbol<span class="sc10">=&amp;</span>symbolBuffer<span class="sc10">[</span><span class="sc5">sizeof</span><span class="sc10">(</span>symbolBuffer<span class="sc10">)];</span>
+    <span class="sc5">while</span> <span class="sc10">(</span>symbol<span class="sc10">!=&amp;</span>symbolBuffer<span class="sc10">[</span><span class="sc4">0</span><span class="sc10">])</span> <span class="sc10">{*--</span>symbol<span class="sc10">=</span><span class="sc4">0</span><span class="sc10">;}</span>
+<span class="sc10">}</span>
+
+
+<span class="sc1">/* ------------------------------------------------------------------------- */</span>
+<span class="sc1">/* ------------------------ interface to USB driver ------------------------ */</span>
+<span class="sc1">/* ------------------------------------------------------------------------- */</span>
+
+uchar   usbFunctionSetup<span class="sc10">(</span>uchar data<span class="sc10">[</span><span class="sc4">8</span><span class="sc10">])</span> <span class="sc10">{</span>
+    usbRequest_t    <span class="sc10">*</span>rq <span class="sc10">=</span> <span class="sc10">(</span><span class="sc16">void</span> <span class="sc10">*)</span>data<span class="sc10">;</span>
+
+    usbMsgPtr <span class="sc10">=</span> reportBuffer<span class="sc10">;</span>
+    <span class="sc5">if</span><span class="sc10">((</span>rq<span class="sc10">-&gt;</span>bmRequestType <span class="sc10">&amp;</span> USBRQ_TYPE_MASK<span class="sc10">)</span> <span class="sc10">==</span> USBRQ_TYPE_CLASS<span class="sc10">){</span>  <span class="sc1">/* class request type */</span>
+        <span class="sc5">if</span><span class="sc10">(</span>rq<span class="sc10">-&gt;</span>bRequest <span class="sc10">==</span> USBRQ_HID_GET_REPORT<span class="sc10">){</span>  <span class="sc1">/* wValue: ReportType (highbyte), ReportID (lowbyte) */</span>
+            <span class="sc1">/* we only have one report type, so don't look at wValue */</span>
+            buildReport<span class="sc10">();</span>
+            <span class="sc5">return</span> <span class="sc5">sizeof</span><span class="sc10">(</span>reportBuffer<span class="sc10">);</span>
+        <span class="sc10">}</span><span class="sc5">else</span> <span class="sc5">if</span><span class="sc10">(</span>rq<span class="sc10">-&gt;</span>bRequest <span class="sc10">==</span> USBRQ_HID_GET_IDLE<span class="sc10">){</span>
+            usbMsgPtr <span class="sc10">=</span> <span class="sc10">&amp;</span>idleRate<span class="sc10">;</span>
+            <span class="sc5">return</span> <span class="sc4">1</span><span class="sc10">;</span>
+        <span class="sc10">}</span><span class="sc5">else</span> <span class="sc5">if</span><span class="sc10">(</span>rq<span class="sc10">-&gt;</span>bRequest <span class="sc10">==</span> USBRQ_HID_SET_IDLE<span class="sc10">){</span>
+            idleRate <span class="sc10">=</span> rq<span class="sc10">-&gt;</span>wValue<span class="sc10">.</span>bytes<span class="sc10">[</span><span class="sc4">1</span><span class="sc10">];</span>
+        <span class="sc10">}</span>
+    <span class="sc10">}</span><span class="sc5">else</span><span class="sc10">{</span>
+        <span class="sc1">/* no vendor specific requests implemented */</span>
+    <span class="sc10">}</span>
+    <span class="sc5">return</span> <span class="sc4">0</span><span class="sc10">;</span>
+<span class="sc10">}</span>
+
+<span class="sc1">/* ------------------------------------------------------------------------- */</span>
+<span class="sc1">/* ------------------------ Oscillator Calibration ------------------------- */</span>
+<span class="sc1">/* ------------------------------------------------------------------------- */</span>
+
+<span class="sc1">/* Calibrate the RC oscillator to 8.25 MHz. The core clock of 16.5 MHz is
+ * derived from the 66 MHz peripheral clock by dividing. Our timing reference
+ * is the Start Of Frame signal (a single SE0 bit) available immediately after
+ * a USB RESET. We first do a binary search for the OSCCAL value and then
+ * optimize this value with a neighboorhod search.
+ * This algorithm may also be used to calibrate the RC oscillator directly to
+ * 12 MHz (no PLL involved, can therefore be used on almost ALL AVRs), but this
+ * is wide outside the spec for the OSCCAL value and the required precision for
+ * the 12 MHz clock! Use the RC oscillator calibrated to 12 MHz for
+ * experimental purposes only!
+ */</span>
+<span class="sc16">static</span> <span class="sc16">void</span> calibrateOscillator<span class="sc10">(</span><span class="sc16">void</span><span class="sc10">)</span> <span class="sc10">{</span>
+    uchar   step <span class="sc10">=</span> <span class="sc4">128</span><span class="sc10">;</span>
+    uchar   trialValue <span class="sc10">=</span> <span class="sc4">0</span><span class="sc10">,</span> optimumValue<span class="sc10">;</span>
+    <span class="sc16">int</span>     x<span class="sc10">,</span> optimumDev<span class="sc10">,</span> targetValue <span class="sc10">=</span> <span class="sc10">(</span><span class="sc16">unsigned</span><span class="sc10">)(</span><span class="sc4">1499</span> <span class="sc10">*</span> <span class="sc10">(</span><span class="sc16">double</span><span class="sc10">)</span>F_CPU <span class="sc10">/</span> <span class="sc4">10.5e6</span> <span class="sc10">+</span> <span class="sc4">0.5</span><span class="sc10">);</span>
+
+    <span class="sc1">/* do a binary search: */</span>
+    <span class="sc5">do</span><span class="sc10">{</span>
+        OSCCAL <span class="sc10">=</span> trialValue <span class="sc10">+</span> step<span class="sc10">;</span>
+        x <span class="sc10">=</span> usbMeasureFrameLength<span class="sc10">();</span>    <span class="sc1">/* proportional to current real frequency */</span>
+        <span class="sc5">if</span><span class="sc10">(</span>x <span class="sc10">&lt;</span> targetValue<span class="sc10">)</span>             <span class="sc1">/* frequency still too low */</span>
+            trialValue <span class="sc10">+=</span> step<span class="sc10">;</span>
+        step <span class="sc10">&gt;&gt;=</span> <span class="sc4">1</span><span class="sc10">;</span>
+    <span class="sc10">}</span><span class="sc5">while</span><span class="sc10">(</span>step <span class="sc10">&gt;</span> <span class="sc4">0</span><span class="sc10">);</span>
+    <span class="sc1">/* We have a precision of +/- 1 for optimum OSCCAL here */</span>
+    <span class="sc1">/* now do a neighborhood search for optimum value */</span>
+    optimumValue <span class="sc10">=</span> trialValue<span class="sc10">;</span>
+    optimumDev <span class="sc10">=</span> x<span class="sc10">;</span> <span class="sc1">/* this is certainly far away from optimum */</span>
+    <span class="sc5">for</span><span class="sc10">(</span>OSCCAL <span class="sc10">=</span> trialValue <span class="sc10">-</span> <span class="sc4">1</span><span class="sc10">;</span> OSCCAL <span class="sc10">&lt;=</span> trialValue <span class="sc10">+</span> <span class="sc4">1</span><span class="sc10">;</span> OSCCAL<span class="sc10">++){</span>
+        x <span class="sc10">=</span> usbMeasureFrameLength<span class="sc10">()</span> <span class="sc10">-</span> targetValue<span class="sc10">;</span>
+        <span class="sc5">if</span><span class="sc10">(</span>x <span class="sc10">&lt;</span> <span class="sc4">0</span><span class="sc10">)</span>
+            x <span class="sc10">=</span> <span class="sc10">-</span>x<span class="sc10">;</span>
+        <span class="sc5">if</span><span class="sc10">(</span>x <span class="sc10">&lt;</span> optimumDev<span class="sc10">){</span>
+            optimumDev <span class="sc10">=</span> x<span class="sc10">;</span>
+            optimumValue <span class="sc10">=</span> OSCCAL<span class="sc10">;</span>
+        <span class="sc10">}</span>
+    <span class="sc10">}</span>
+    OSCCAL <span class="sc10">=</span> optimumValue<span class="sc10">;</span>
+<span class="sc10">}</span>
+<span class="sc1">/*
+Note: This calibration algorithm may try OSCCAL values of up to 192 even if
+the optimum value is far below 192. It may therefore exceed the allowed clock
+frequency of the CPU in low voltage designs!
+You may replace this search algorithm with any other algorithm you like if
+you have additional constraints such as a maximum CPU clock.
+For version 5.x RC oscillators (those with a split range of 2x128 steps, e.g.
+ATTiny25, ATTiny45, ATTiny85), it may be useful to search for the optimum in
+both regions.
+*/</span>
+
+<span class="sc16">void</span> usbEventResetReady<span class="sc10">(</span><span class="sc16">void</span><span class="sc10">)</span> <span class="sc10">{</span>
+    <span class="sc1">/* Disable interrupts during oscillator calibration since
+     * usbMeasureFrameLength() counts CPU cycles.
+     */</span>
+    cli<span class="sc10">();</span>
+    calibrateOscillator<span class="sc10">();</span>
+    sei<span class="sc10">();</span>
+    eeprom_write_byte<span class="sc10">(</span><span class="sc4">0</span><span class="sc10">,</span> OSCCAL<span class="sc10">);</span>   <span class="sc1">/* store the calibrated value in EEPROM */</span>
+<span class="sc10">}</span>
+
+<span class="sc1">/* ------------------------------------------------------------------------- */</span>
+<span class="sc1">/* --------------------------------- main ---------------------------------- */</span>
+<span class="sc1">/* ------------------------------------------------------------------------- */</span>
+
+<span class="sc16">int</span> main<span class="sc10">(</span><span class="sc16">void</span><span class="sc10">)</span> <span class="sc10">{</span>
+    uchar   i<span class="sc10">;</span>
+    uchar   calibrationValue<span class="sc10">;</span>
+
+    calibrationValue <span class="sc10">=</span> eeprom_read_byte<span class="sc10">(</span><span class="sc4">0</span><span class="sc10">);</span> <span class="sc1">/* calibration value from last time */</span>
+    <span class="sc5">if</span><span class="sc10">(</span>calibrationValue <span class="sc10">!=</span> <span class="sc4">0xff</span><span class="sc10">){</span>
+        OSCCAL <span class="sc10">=</span> calibrationValue<span class="sc10">;</span>
+    <span class="sc10">}</span>
+    usbDeviceDisconnect<span class="sc10">();</span>
+    <span class="sc5">for</span><span class="sc10">(</span>i<span class="sc10">=</span><span class="sc4">0</span><span class="sc10">;</span>i<span class="sc10">&lt;</span><span class="sc4">20</span><span class="sc10">;</span>i<span class="sc10">++){</span>  <span class="sc1">/* 300 ms disconnect */</span>
+        _delay_ms<span class="sc10">(</span><span class="sc4">15</span><span class="sc10">);</span>
+    <span class="sc10">}</span>
+    usbDeviceConnect<span class="sc10">();</span>
+    DDRB <span class="sc10">|=</span> <span class="sc4">1</span> <span class="sc10">&lt;&lt;</span> BIT_PIEZO<span class="sc10">;</span>   <span class="sc1">/* output for buzzer */</span>
+    PORTB <span class="sc10">|=</span> <span class="sc4">1</span> <span class="sc10">&lt;&lt;</span> BIT_KEY<span class="sc10">;</span>  <span class="sc1">/* pull-up on key input */</span>
+    wdt_enable<span class="sc10">(</span>WDTO_1S<span class="sc10">);</span>
+    timerInit<span class="sc10">();</span>
+    usbInit<span class="sc10">();</span>
+    sei<span class="sc10">();</span>
+    <span class="sc5">for</span><span class="sc10">(;;){</span>    <span class="sc1">/* main event loop */</span>
+        wdt_reset<span class="sc10">();</span>
+        usbPoll<span class="sc10">();</span>
+        <span class="sc5">if</span><span class="sc10">(</span>usbInterruptIsReady<span class="sc10">()</span> <span class="sc10">&amp;&amp;</span> nextDigit <span class="sc10">!=</span> <span class="sc5">NULL</span><span class="sc10">){</span> <span class="sc1">/* we can send another key */</span>
+            buildReport<span class="sc10">();</span>
+            usbSetInterrupt<span class="sc10">(</span>reportBuffer<span class="sc10">,</span> <span class="sc5">sizeof</span><span class="sc10">(</span>reportBuffer<span class="sc10">));</span>
+            <span class="sc5">if</span><span class="sc10">(*++</span>nextDigit <span class="sc10">==</span> <span class="sc4">0xff</span><span class="sc10">)</span>    <span class="sc1">/* this was terminator character */</span>
+                nextDigit <span class="sc10">=</span> <span class="sc5">NULL</span><span class="sc10">;</span>
+        <span class="sc10">}</span>
+        timerPoll<span class="sc10">();</span>
+    <span class="sc10">}</span>
+    <span class="sc5">return</span> <span class="sc4">0</span><span class="sc10">;</span>
+<span class="sc10">}</span>
+</pre>
+
+<br><br><nav>
+<a class="rnd" href="https://mitxela.com/projects/random" title="random project">~</a>
+<span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" href="https://mitxela.com/">mitxela.com</a></span> » 
+<span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" href="https://mitxela.com/projects">Projects</a></span> » 
+<span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" href="https://mitxela.com/projects/hardware">Hardware</a></span> »
+<span typeof="v:Breadcrumb"><a rel="v:url" property="v:title" href="https://mitxela.com/projects/morse_code_usb_keyboard_mk_ii">Morse Code USB Keyboard Mk II</a></span>
+</nav></div><div style="height:500px;clear:both; background:url(/img/paintloop1.png) repeat-x bottom;"></div></body></html>
