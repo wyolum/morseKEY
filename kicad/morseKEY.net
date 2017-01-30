@@ -1,7 +1,7 @@
 (export (version D)
   (design
-    (source /home/anool/projects-git/morseKEY/kicad/morseKEY.sch)
-    (date "Mon Jan 30 15:45:57 2017")
+    (source /home/samata/projects-git/morseKEY/kicad/morseKEY.sch)
+    (date "Tue Jan 31 00:25:01 2017")
     (tool "Eeschema 4.0.5-e0-6337~49~ubuntu16.04.1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -87,7 +87,7 @@
       (tstamp 588DEE41))
     (comp (ref R4)
       (value 2k5)
-      (footprint morseKEY:Pin_Header_Straight_1x03)
+      (footprint morseKEY:res_vert)
       (fields
         (field (name manf#) mfr_pn))
       (libsource (lib morseKEY) (part R_VAR))
@@ -234,7 +234,7 @@
         (pin (num 2) (name A) (type passive)))))
   (libraries
     (library (logical morseKEY)
-      (uri /home/anool/projects-git/morseKEY/kicad/morseKEY.lib)))
+      (uri /home/samata/projects-git/morseKEY/kicad/morseKEY.lib)))
   (nets
     (net (code 1) (name /MOSI)
       (node (ref P3) (pin 4))
