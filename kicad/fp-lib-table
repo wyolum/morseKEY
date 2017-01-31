@@ -1,3 +1,4 @@
 (fp_lib_table
   (lib (name morseKEY)(type KiCad)(uri "$(KIPRJMOD)/morseKEY.pretty")(options "")(descr ""))
+  (lib (name morseKEY2)(type Legacy)(uri "$(KIPRJMOD)/morseKEY.mod")(options "")(descr ""))
 )
