@@ -1,37 +1,6 @@
 EESchema Schematic File Version 2
 LIBS:morseKEY
 LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:ultim8x64_sym
-LIBS:uControl
-LIBS:mmM
 LIBS:morseKEY-cache
 EELAYER 25 0
 EELAYER END
@@ -263,7 +232,7 @@ L R_VAR R4
 U 1 1 588DF207
 P 3825 3250
 F 0 "R4" H 3725 3250 50  0000 C CNB
-F 1 "2k5" V 3825 3250 50  0000 C CNN
+F 1 "1k5" V 3825 3250 50  0000 C CNN
 F 2 "morseKEY:res_vert" V 3755 3250 50  0001 C CNN
 F 3 "" H 3825 3250 50  0000 C CNN
 F 4 "mfr_pn" H 3825 3250 60  0001 C CNN "manf#"
@@ -275,7 +244,7 @@ L R R5
 U 1 1 588DF479
 P 3825 4325
 F 0 "R5" H 3725 4325 50  0000 C CNB
-F 1 "2k5" V 3825 4325 50  0000 C CNN
+F 1 "3k3" V 3825 4325 50  0000 C CNN
 F 2 "morseKEY:Resistor_Vertical_RM5mm" V 3755 4325 50  0001 C CNN
 F 3 "" H 3825 4325 50  0000 C CNN
 	1    3825 4325

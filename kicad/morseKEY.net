@@ -1,7 +1,7 @@
 (export (version D)
   (design
-    (source /home/samata/projects-git/morseKEY/kicad/morseKEY.sch)
-    (date "Tue Jan 31 23:36:11 2017")
+    (source /home/anool/projects-git/morseKEY/kicad/morseKEY.sch)
+    (date "Wed Feb  1 13:24:21 2017")
     (tool "Eeschema 4.0.5-e0-6337~49~ubuntu16.04.1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -80,7 +80,7 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 588326BD))
     (comp (ref R4)
-      (value 2k5)
+      (value 1k5)
       (footprint morseKEY:res_vert)
       (fields
         (field (name manf#) mfr_pn))
@@ -88,7 +88,7 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 588DF207))
     (comp (ref R5)
-      (value 2k5)
+      (value 3k3)
       (footprint morseKEY:Resistor_Vertical_RM5mm)
       (libsource (lib morseKEY) (part R))
       (sheetpath (names /) (tstamps /))
@@ -108,13 +108,13 @@
     (comp (ref P4)
       (value MTG)
       (footprint morseKEY:1pin)
-      (libsource (lib conn) (part CONN_01X01))
+      (libsource (lib morseKEY-cache) (part CONN_01X01))
       (sheetpath (names /) (tstamps /))
       (tstamp 58909FCB))
     (comp (ref P5)
       (value MTG)
       (footprint morseKEY:1pin)
-      (libsource (lib conn) (part CONN_01X01))
+      (libsource (lib morseKEY-cache) (part CONN_01X01))
       (sheetpath (names /) (tstamps /))
       (tstamp 5890A054))
     (comp (ref G1)
@@ -128,7 +128,7 @@
     (comp (ref G2)
       (value CKT)
       (footprint morseKEY:morseKEY)
-      (libsource (lib conn) (part CONN_01X01))
+      (libsource (lib morseKEY-cache) (part CONN_01X01))
       (sheetpath (names /) (tstamps /))
       (tstamp 5890F12E)))
   (libparts
@@ -162,8 +162,7 @@
       (pins
         (pin (num 1) (name ~) (type passive))
         (pin (num 2) (name ~) (type passive))))
-    (libpart (lib conn) (part CONN_01X01)
-      (description "Connector, single row, 01x01")
+    (libpart (lib morseKEY-cache) (part CONN_01X01)
       (footprints
         (fp Pin_Header_Straight_1X01)
         (fp Pin_Header_Angled_1X01)
@@ -278,10 +277,10 @@
         (pin (num 1) (name K) (type passive))
         (pin (num 2) (name A) (type passive)))))
   (libraries
-    (library (logical conn)
-      (uri /usr/share/kicad/library/conn.lib))
+    (library (logical morseKEY-cache)
+      (uri /home/anool/projects-git/morseKEY/kicad/morseKEY-cache.lib))
     (library (logical morseKEY)
-      (uri /home/samata/projects-git/morseKEY/kicad/morseKEY.lib)))
+      (uri /home/anool/projects-git/morseKEY/kicad/morseKEY.lib)))
   (nets
     (net (code 1) (name /SCK)
       (node (ref R3) (pin 2))

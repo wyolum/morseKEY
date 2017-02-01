@@ -1,0 +1,16 @@
+"Id";"Designator";"Package";"Quantity";"Designation";"Supplier and ref";
+1;"P3";"Pin_Header_Straight_2x03";1;"ISP";;;
+2;"C2";"C_Radial_D5_L6_P2.5";1;"33uF,10V";;;
+3;"U1";"DIP-8_W7.62mm_LongPads";1;"ATTINY85-P";;;
+4;"SP1";"Pin_Header_Straight_1x04";1;"BUZ";;;
+5;"P2";"Pin_Header_Straight_1x03";1;"KEY";;;
+6;"C1";"C_Disc_D3_P2.5";1;"100nF";;;
+7;"R4";"res_vert";1;"1k5";;;
+8;"G1";"OSHW_logo_notext";1;"OSHW-LOGO";;;
+9;"D1,D2";"Diode_DO-41_SOD81_Vertical_KathodeUp_2";2;"3V6";;;
+10;"R1";"Resistor_Vertical_RM5mm";1;"2k2";;;
+11;"R2,R3";"Resistor_Vertical_RM5mm";2;"68E";;;
+12;"R5";"Resistor_Vertical_RM5mm";1;"3k3";;;
+13;"G2";"morseKEY";1;"CKT";;;
+14;"P4,P5";"1pin";2;"MTG";;;
+15;"P1";"USB_A_up2-ah-th";1;"USB_A";;;

@@ -3,7 +3,7 @@
   (general
     (links 38)
     (no_connects 0)
-    (area 10.199999 23.536 88.007144 47.15)
+    (area 25.324999 25.324999 76.275001 40.715001)
     (thickness 1.6)
     (drawings 44)
     (tracks 134)
@@ -14,13 +14,13 @@
 
   (page A4)
   (layers
-    (0 F.Cu signal)
-    (31 B.Cu signal)
+    (0 F.Cu signal hide)
+    (31 B.Cu signal hide)
     (32 B.Adhes user)
     (33 F.Adhes user)
     (34 B.Paste user)
     (35 F.Paste user)
-    (36 B.SilkS user)
+    (36 B.SilkS user hide)
     (37 F.SilkS user)
     (38 B.Mask user)
     (39 F.Mask user)
@@ -31,7 +31,7 @@
     (44 Edge.Cuts user)
     (45 Margin user)
     (46 B.CrtYd user)
-    (47 F.CrtYd user)
+    (47 F.CrtYd user hide)
     (48 B.Fab user)
     (49 F.Fab user)
   )
@@ -65,11 +65,12 @@
     (pad_drill 1.016)
     (pad_to_mask_clearance 0.2)
     (aux_axis_origin 0 0)
-    (visible_elements FFFFEFFF)
+    (visible_elements FFFFEF7F)
     (pcbplotparams
-      (layerselection 0x00130_80000001)
-      (usegerberextensions false)
-      (excludeedgelayer false)
+      (layerselection 0x00030_00000000)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (excludeedgelayer true)
       (linewidth 0.101600)
       (plotframeref false)
       (viasonmask false)
@@ -84,13 +85,13 @@
       (plotreference true)
       (plotvalue true)
       (plotinvisibletext false)
-      (padsonsilk true)
-      (subtractmaskfromsilk false)
-      (outputformat 4)
+      (padsonsilk false)
+      (subtractmaskfromsilk true)
+      (outputformat 1)
       (mirror false)
-      (drillshape 2)
+      (drillshape 0)
       (scaleselection 1)
-      (outputdirectory pdf/))
+      (outputdirectory gerber/))
   )
 
   (net 0 "")
@@ -187,11 +188,6 @@
       (net 10 /RST))
     (pad 6 thru_hole rect (at 1.27 2.54 180) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
       (net 2 /GND))
-    (model header_2x3_TH_2_54mm.wrl
-      (at (xyz 0 0 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 90))
-    )
   )
 
   (module morseKEY:C_Radial_D5_L6_P2.5 (layer F.Cu) (tedit 589062C7) (tstamp 588F13B2)
@@ -313,7 +309,7 @@
       (net 2 /GND))
     (pad 4 thru_hole rect (at 3.81 0 90) (size 1.651 2.286) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
       (net 2 /GND))
-    (model header_1x4_TH_2_54mm.wrl
+    (model PS1240P02BT.wrl
       (at (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
@@ -348,7 +344,7 @@
       (net 2 /GND))
     (pad 3 thru_hole oval (at 0 2.54) (size 2.286 1.651) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
       (net 6 /K3))
-    (model header_1x3_TH_2_54mm.wrl
+    (model header_Male_RA_Low_3Pin.wrl
       (at (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 90))
@@ -383,7 +379,7 @@
     )
   )
 
-  (module morseKEY:res_vert (layer F.Cu) (tedit 5890468D) (tstamp 588F8DFA)
+  (module morseKEY:res_vert (layer F.Cu) (tedit 5891943D) (tstamp 588F8DFA)
     (at 59.055 31.75)
     (descr "Through hole pin header")
     (tags "pin header")
@@ -391,7 +387,7 @@
     (fp_text reference R4 (at -1.905 3.81 90) (layer F.SilkS)
       (effects (font (size 0.762 0.762) (thickness 0.127)))
     )
-    (fp_text value 2k5 (at 0 -5.64) (layer F.Fab) hide
+    (fp_text value 1k5 (at 0 -5.64) (layer F.Fab) hide
       (effects (font (size 0.762 0.762) (thickness 0.127)))
     )
     (fp_line (start -2.54 4.572) (end -2.54 -4.572) (layer F.SilkS) (width 0.15))
@@ -595,7 +591,7 @@
     )
   )
 
-  (module morseKEY:Resistor_Vertical_RM5mm (layer F.Cu) (tedit 58908096) (tstamp 588F144B)
+  (module morseKEY:Resistor_Vertical_RM5mm (layer F.Cu) (tedit 5891944C) (tstamp 588F144B)
     (at 58.42 38.1 180)
     (descr "Resistor, Vertical, RM 5mm, 1/3W,")
     (tags "Resistor, Vertical, RM 5mm, 1/3W,")
@@ -603,7 +599,7 @@
     (fp_text reference R5 (at 0 0 270) (layer F.SilkS)
       (effects (font (size 0.762 0.762) (thickness 0.127)))
     )
-    (fp_text value 2k5 (at -2.54 0.254 180) (layer F.SilkS) hide
+    (fp_text value 3k3 (at -2.54 0.254 180) (layer F.SilkS) hide
       (effects (font (size 0.762 0.762) (thickness 0.127)))
     )
     (fp_circle (center -2.54 0) (end -1.143 0) (layer F.SilkS) (width 0.2))
