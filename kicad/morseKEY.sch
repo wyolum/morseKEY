@@ -135,9 +135,9 @@ Text Label 4150 2875 0    50   ~ 10
 Wire Wire Line
 	8575 3475 8500 3475
 Wire Wire Line
-	8500 3475 8500 2875
+	8500 2875 8500 3475
 Wire Wire Line
-	8500 2875 3825 2875
+	3825 2875 8500 2875
 Wire Wire Line
 	7175 2875 7175 3475
 Wire Wire Line
@@ -258,16 +258,6 @@ Wire Wire Line
 Wire Wire Line
 	3825 4475 3825 4850
 Connection ~ 3825 4850
-Wire Wire Line
-	4425 3975 3825 3975
-Connection ~ 3825 3975
-Wire Wire Line
-	3925 3250 3950 3250
-Wire Wire Line
-	3950 3250 3950 3450
-Wire Wire Line
-	3950 3450 3825 3450
-Connection ~ 3825 3450
 $Comp
 L CONN_02X03 P3
 U 1 1 588E044D
@@ -422,4 +412,10 @@ F 3 "" H 5350 6600 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 NoConn ~ 5350 6800
+Wire Wire Line
+	3925 3250 3950 3250
+Wire Wire Line
+	3950 3250 3950 3975
+Wire Wire Line
+	3950 3975 4425 3975
 $EndSCHEMATC
