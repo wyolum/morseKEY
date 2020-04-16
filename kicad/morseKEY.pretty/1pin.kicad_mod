@@ -1,4 +1,4 @@
-(module 1pin (layer F.Cu) (tedit 5890D89E)
+(module 1pin (layer F.Cu) (tedit 5E985F9A)
   (descr "module 1 pin (ou trou mecanique de percage)")
   (tags DEV)
   (fp_text reference P4 (at 0 -3.048) (layer F.SilkS) hide
@@ -8,5 +8,5 @@
     (effects (font (size 1 1) (thickness 0.15)))
   )
   (fp_circle (center 0 0) (end 1.778 -0.127) (layer F.SilkS) (width 0.15))
-  (pad "" np_thru_hole circle (at 0 0) (size 3 3) (drill 2.5) (layers *.Cu *.Mask))
+  (pad "" thru_hole circle (at 0 0) (size 3 3) (drill 3) (layers *.Cu *.Mask))
 )

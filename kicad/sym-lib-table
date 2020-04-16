@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name morseKEY-rescue)(type Legacy)(uri ${KIPRJMOD}/morseKEY-rescue.lib)(options "")(descr ""))
+  (lib (name morseKEY)(type Legacy)(uri ${KIPRJMOD}/morseKEY.lib)(options "")(descr ""))
+  (lib (name power1)(type Legacy)(uri /usr/share/kicad/library/power.lib)(options "")(descr ""))
+)

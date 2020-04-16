@@ -1,8 +1,5 @@
-EESchema Schematic File Version 2
-LIBS:morseKEY
-LIBS:power
-LIBS:morseKEY-cache
-EELAYER 25 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -17,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L ATTINY85-P U1
+L morseKEY:ATTINY85-P U1
 U 1 1 5883248B
 P 5775 3725
 F 0 "U1" H 4625 4200 50  0000 C CNB
@@ -28,7 +25,7 @@ F 3 "" H 5775 3725 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C1
+L morseKEY:C C1
 U 1 1 58832568
 P 7325 3250
 F 0 "C1" H 7350 3350 50  0000 L CNB
@@ -39,7 +36,7 @@ F 3 "" H 7325 3250 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_POL C2
+L morseKEY:C_POL C2
 U 1 1 5883258F
 P 7650 3250
 F 0 "C2" H 7675 3350 50  0000 L CNB
@@ -51,7 +48,7 @@ F 4 "mfr_pn" H 7650 3250 60  0001 C CNN "manf#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R2
+L morseKEY:R R2
 U 1 1 588325AA
 P 7900 3575
 F 0 "R2" V 7800 3575 50  0000 C CNB
@@ -62,7 +59,7 @@ F 3 "" H 7900 3575 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R3
+L morseKEY:R R3
 U 1 1 588325C7
 P 7900 3675
 F 0 "R3" V 8000 3675 50  0000 C CNB
@@ -73,7 +70,7 @@ F 3 "" H 7900 3675 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R1
+L morseKEY:R R1
 U 1 1 588325E6
 P 8350 3250
 F 0 "R1" H 8250 3250 50  0000 C CNB
@@ -84,7 +81,7 @@ F 3 "" H 8350 3250 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ZENERsmall D1
+L morseKEY:ZENERsmall D1
 U 1 1 58832607
 P 8150 4300
 F 0 "D1" V 8250 4350 50  0000 C CNB
@@ -95,7 +92,7 @@ F 3 "" H 8150 4300 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L ZENERsmall D2
+L morseKEY:ZENERsmall D2
 U 1 1 5883263A
 P 8350 4300
 F 0 "D2" V 8450 4350 50  0000 C CNB
@@ -106,7 +103,7 @@ F 3 "" H 8350 4300 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L SPEAKER2 SP1
+L morseKEY:SPEAKER2 SP1
 U 1 1 5883265F
 P 3200 3250
 F 0 "SP1" H 3200 3575 50  0000 C CNB
@@ -118,7 +115,7 @@ F 4 "Value" H 3200 3250 60  0001 C CNN "manf#"
 	-1   0    0    -1  
 $EndComp
 $Comp
-L USB_A P1
+L morseKEY:USB_A P1
 U 1 1 588326BD
 P 8875 3675
 F 0 "P1" V 8500 3675 50  0000 C CNB
@@ -137,7 +134,7 @@ Wire Wire Line
 Wire Wire Line
 	8500 2875 8500 3475
 Wire Wire Line
-	3825 2875 8500 2875
+	3825 2875 7175 2875
 Wire Wire Line
 	7175 2875 7175 3475
 Wire Wire Line
@@ -152,9 +149,9 @@ Wire Wire Line
 	8350 3100 8350 2875
 Connection ~ 8350 2875
 Wire Wire Line
-	8050 3575 8575 3575
+	8050 3575 8150 3575
 Wire Wire Line
-	8050 3675 8575 3675
+	8050 3675 8350 3675
 Wire Wire Line
 	8150 4200 8150 3575
 Connection ~ 8150 3575
@@ -165,7 +162,7 @@ Wire Wire Line
 	8350 3400 8350 3575
 Connection ~ 8350 3575
 Wire Wire Line
-	3500 3150 3625 3150
+	3500 3150 3550 3150
 Wire Wire Line
 	3625 3150 3625 3575
 Wire Wire Line
@@ -173,9 +170,9 @@ Wire Wire Line
 Wire Wire Line
 	3500 3350 3550 3350
 Wire Wire Line
-	3550 3300 3550 4850
+	3550 3300 3550 3350
 Wire Wire Line
-	3375 4850 8975 4850
+	3375 4850 3550 4850
 Wire Wire Line
 	8500 4850 8500 3775
 Wire Wire Line
@@ -228,7 +225,7 @@ Wire Wire Line
 Wire Wire Line
 	3425 3775 4425 3775
 $Comp
-L R_VAR R4
+L morseKEY:R_VAR R4
 U 1 1 588DF207
 P 3825 3250
 F 0 "R4" H 3725 3250 50  0000 C CNB
@@ -240,7 +237,7 @@ F 4 "mfr_pn" H 3825 3250 60  0001 C CNN "manf#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R5
+L morseKEY:R R5
 U 1 1 588DF479
 P 3825 4325
 F 0 "R5" H 3725 4325 50  0000 C CNB
@@ -259,7 +256,7 @@ Wire Wire Line
 	3825 4475 3825 4850
 Connection ~ 3825 4850
 $Comp
-L CONN_02X03 P3
+L morseKEY:CONN_02X03 P3
 U 1 1 588E044D
 P 3225 6125
 F 0 "P3" H 3225 6325 50  0000 C CNB
@@ -310,7 +307,7 @@ GND
 Text Label 3875 6025 2    40   ~ 8
 5V
 $Comp
-L PWR_FLAG #FLG01
+L power1:PWR_FLAG #FLG01
 U 1 1 588E17BF
 P 3975 5925
 F 0 "#FLG01" H 3975 6020 50  0001 C CNN
@@ -321,7 +318,7 @@ F 3 "" H 3975 5925 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L PWR_FLAG #FLG02
+L power1:PWR_FLAG #FLG02
 U 1 1 588E1825
 P 3975 6325
 F 0 "#FLG02" H 3975 6420 50  0001 C CNN
@@ -354,7 +351,7 @@ Wire Wire Line
 Wire Wire Line
 	3275 4325 3375 4325
 $Comp
-L CONN_01X03 P2
+L morseKEY:CONN_01X03 P2
 U 1 1 588DEE41
 P 3075 4325
 F 0 "P2" H 3075 4600 50  0000 C CNB
@@ -365,7 +362,7 @@ F 3 "" H 3075 4325 50  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L CONN_01X01 P4
+L morseKEY-rescue:CONN_01X01 P4
 U 1 1 58909FCB
 P 5375 6050
 F 0 "P4" H 5375 6150 50  0000 C CNN
@@ -376,7 +373,7 @@ F 3 "" H 5375 6050 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CONN_01X01 P5
+L morseKEY-rescue:CONN_01X01 P5
 U 1 1 5890A054
 P 5775 6050
 F 0 "P5" H 5775 6150 50  0000 C CNN
@@ -389,7 +386,7 @@ $EndComp
 NoConn ~ 5375 6250
 NoConn ~ 5775 6250
 $Comp
-L OSHW-LOGO G1
+L morseKEY:OSHW-LOGO G1
 U 1 1 5890D05B
 P 10875 6800
 F 0 "G1" H 10875 6800 50  0001 C CNN
@@ -401,7 +398,7 @@ F 4 "mfr_pn" H 10875 6800 60  0001 C CNN "manf#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X01 G2
+L morseKEY-rescue:CONN_01X01 G2
 U 1 1 5890F12E
 P 5350 6600
 F 0 "G2" H 5350 6700 50  0000 C CNN
@@ -418,4 +415,49 @@ Wire Wire Line
 	3950 3250 3950 3975
 Wire Wire Line
 	3950 3975 4425 3975
+Wire Wire Line
+	7325 2875 7650 2875
+Wire Wire Line
+	7650 2875 8350 2875
+Wire Wire Line
+	8350 2875 8500 2875
+Wire Wire Line
+	8150 3575 8350 3575
+Wire Wire Line
+	8350 3675 8575 3675
+Wire Wire Line
+	8350 3575 8575 3575
+Wire Wire Line
+	8500 4850 8975 4850
+Wire Wire Line
+	8350 4850 8500 4850
+Wire Wire Line
+	8150 4850 8350 4850
+Wire Wire Line
+	7650 4850 8150 4850
+Wire Wire Line
+	7325 4850 7650 4850
+Wire Wire Line
+	7175 4850 7325 4850
+Wire Wire Line
+	3550 4850 3825 4850
+Wire Wire Line
+	7175 2875 7325 2875
+Wire Wire Line
+	3825 4850 7175 4850
+Wire Wire Line
+	3550 3150 3625 3150
+Wire Wire Line
+	3550 3350 3550 4850
+$Comp
+L morseKEY-rescue:CONN_01X01 P6
+U 1 1 5E9978EB
+P 6175 6050
+F 0 "P6" H 6175 6150 50  0000 C CNN
+F 1 "MTG" V 6275 6050 50  0000 C CNN
+F 2 "morseKEY:1pin" H 6175 6050 50  0001 C CNN
+F 3 "" H 6175 6050 50  0000 C CNN
+	1    6175 6050
+	0    -1   -1   0   
+$EndComp
 $EndSCHEMATC
